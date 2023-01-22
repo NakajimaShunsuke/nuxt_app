@@ -8,6 +8,17 @@
           </v-card-title>
           <v-divider></v-divider>
           <v-card-text>
+            <v-alert
+              outlined
+              type="error"
+              :value="alert"
+              transition="scale-transition"
+              text
+            >
+              {{ alertMessage }}
+            </v-alert>
+          </v-card-text>
+          <v-card-text>
             <v-row justify="center" align="center">
               <v-col cols="12">
                 <v-text-field
@@ -19,7 +30,7 @@
                     rules.max,
                     rules.isAlphanumeric,
                   ]"
-                  hint="4文字以上、必須入力です"
+                  hint="4文字以上、必須入力です、半角英数字の必須入力です"
                   persistent-hint
                   label="アカウントID"
                   class="my-3"
@@ -55,7 +66,12 @@
                   v-model="password"
                   name="password"
                   :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
-                  :rules="[rules.required]"
+                  :rules="[
+                    rules.required,
+                    rules.min,
+                    rules.max,
+                    rules.isAlphanumeric,
+                  ]"
                   :type="show1 ? 'text' : 'password'"
                   label="パスワード"
                   hint="8文字以上、20文字以内、半角英数字の必須入力です"
@@ -94,6 +110,8 @@ export default {
       email: '',
       password: '',
       show1: false,
+      alert: false,
+      alertMessage: '',
       rules: {
         required: (value) => !!value || 'この項目は必須です',
         min: (v) => v.length >= 4 || 'ユーザーIDの長さは4文字以上です',
@@ -116,6 +134,9 @@ export default {
         // eslint-disable-next-line no-console
         console.log('成功')
         // TODO: ここに登録成功時の処理追加
+        // TODO: APIエラー時に実行する処理
+        this.alert = true
+        this.alertMessage = 'API実行エラー'
       }
     },
   },
