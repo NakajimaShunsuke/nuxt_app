@@ -28,6 +28,7 @@
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-toolbar-title v-text="title" />
       <v-spacer />
+      <v-icon @click="logout()">mdi-logout</v-icon>
     </v-app-bar>
     <v-main>
       <v-container>
@@ -72,6 +73,8 @@
 </template>
 
 <script>
+import { getAuth, signOut } from 'firebase/auth'
+
 export default {
   data() {
     return {
@@ -92,6 +95,24 @@ export default {
       title: 'Vuetify.js',
       icons: ['mdi-home', 'mdi-twitter', 'mdi-instagram', 'mdi-email'],
     }
+  },
+  methods: {
+    async logout() {
+      const auth = getAuth()
+      await signOut(auth)
+        .then(() => {
+          // Sign-out successful.
+          // eslint-disable-next-line no-console
+          console.log('サインアウトしました。')
+          this.$store.dispatch('google/logOut')
+          this.$router.push('/login')
+        })
+        .catch((error) => {
+          // An error happened.
+          // eslint-disable-next-line no-console
+          console.error(error)
+        })
+    },
   },
 }
 </script>
